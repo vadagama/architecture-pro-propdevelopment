@@ -1,0 +1,37 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8spsprunasnonroot
+  annotations:
+    description: >-
+      Требует runAsNonRoot: true и readOnlyRootFilesystem: true для всех контейнеров.
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sPSPRunAsNonRoot
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8spsprunasnonroot
+
+        # Проверка: runAsNonRoot должен быть true
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.runAsNonRoot
+          msg := sprintf("Контейнер '%v' не устанавливает runAsNonRoot: true — это обязательно", [container.name])
+        }
+
+        # Проверка: запуск от root (UID 0) запрещён
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          container.securityContext.runAsUser == 0
+          msg := sprintf("Контейнер '%v' запускается от root (UID 0) — это запрещено", [container.name])
+        }
+
+        # Проверка: readOnlyRootFilesystem должен быть true
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext.readOnlyRootFilesystem
+          msg := sprintf("Контейнер '%v' не устанавливает readOnlyRootFilesystem: true — это обязательно", [container.name])
+        }

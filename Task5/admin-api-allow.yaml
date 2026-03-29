@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: admin-api-allow
+spec:
+  podSelector:
+    matchExpressions:
+      - key: role
+        operator: In
+        values:
+          - admin-front-end
+          - admin-back-end-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: role
+                operator: In
+                values:
+                  - admin-front-end
+                  - admin-back-end-api
+  egress:
+    - to:
+        - podSelector:
+            matchExpressions:
+              - key: role
+                operator: In
+                values:
+                  - admin-front-end
+                  - admin-back-end-api

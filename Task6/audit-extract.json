@@ -1,0 +1,72 @@
+[
+  {
+    "timestamp": "",
+    "verb": "get",
+    "user": "minikube-user",
+    "impersonatedUser": "system:serviceaccount:secure-ops:monitoring",
+    "resource": "secrets",
+    "namespace": "kube-system",
+    "name": "default-token-xxxxx",
+    "subresource": "",
+    "responseCode": 403,
+    "tags": ["secret_access", "impersonation"],
+    "sourceIP": "192.168.49.1",
+    "description": "Попытка доступа к секретам kube-system от имени SA monitoring"
+  },
+  {
+    "timestamp": "",
+    "verb": "create",
+    "user": "minikube-user",
+    "impersonatedUser": "",
+    "resource": "pods",
+    "namespace": "secure-ops",
+    "name": "privileged-pod",
+    "subresource": "",
+    "responseCode": 201,
+    "tags": ["privileged_pod"],
+    "sourceIP": "192.168.49.1",
+    "description": "Создание привилегированного пода с securityContext.privileged=true"
+  },
+  {
+    "timestamp": "",
+    "verb": "create",
+    "user": "minikube-user",
+    "impersonatedUser": "",
+    "resource": "pods",
+    "namespace": "kube-system",
+    "name": "coredns-xxxxxxxxxx-xxxxx",
+    "subresource": "exec",
+    "responseCode": 200,
+    "tags": ["exec_in_pod"],
+    "sourceIP": "192.168.49.1",
+    "description": "kubectl exec в поде coredns из namespace kube-system"
+  },
+  {
+    "timestamp": "",
+    "verb": "delete",
+    "user": "minikube-user",
+    "impersonatedUser": "admin",
+    "resource": "",
+    "namespace": "",
+    "name": "audit-policy.yaml",
+    "subresource": "",
+    "responseCode": 403,
+    "tags": ["audit_policy_tampering", "impersonation"],
+    "sourceIP": "192.168.49.1",
+    "description": "Попытка удаления audit-policy.yaml от имени admin"
+  },
+  {
+    "timestamp": "",
+    "verb": "create",
+    "user": "minikube-user",
+    "impersonatedUser": "",
+    "resource": "rolebindings",
+    "namespace": "secure-ops",
+    "name": "escalate-binding",
+    "subresource": "",
+    "responseCode": 201,
+    "tags": ["rolebinding_escalation"],
+    "sourceIP": "192.168.49.1",
+    "description": "Создание RoleBinding escalate-binding с roleRef=cluster-admin для SA monitoring"
+  }
+]

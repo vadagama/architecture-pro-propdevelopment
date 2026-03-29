@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-hostpath
+  namespace: audit-zone
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  volumes:
+    - name: host-volume
+      hostPath:
+        path: /etc/hosts
+        type: File
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - name: host-volume
+          mountPath: /mnt/hostdata
+          readOnly: true

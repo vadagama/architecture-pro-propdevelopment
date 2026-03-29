@@ -1,0 +1,30 @@
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+  # Log all pod create/update requests at RequestResponse level in audit-zone
+  - level: RequestResponse
+    resources:
+      - group: ""
+        resources: ["pods"]
+    namespaces: ["audit-zone"]
+    verbs: ["create", "update", "patch"]
+
+  # Log all namespace operations
+  - level: Metadata
+    resources:
+      - group: ""
+        resources: ["namespaces"]
+
+  # Log constraint and template changes from Gatekeeper
+  - level: RequestResponse
+    resources:
+      - group: "templates.gatekeeper.sh"
+        resources: ["constrainttemplates"]
+      - group: "constraints.gatekeeper.sh"
+        resources: ["*"]
+    verbs: ["create", "update", "delete"]
+
+  # Default: log metadata for everything else
+  - level: Metadata
+    omitStages:
+      - RequestReceived
